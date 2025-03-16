@@ -18,9 +18,10 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        // Configurar RecyclerView - no es necesario si ya está configurado en XML
+        // binding.rvGeo.layoutManager = LinearLayoutManager(this@MainActivity)
 
-        //binding.rvGeo.layoutManager = LinearLayoutManager(this@MainActivity)
-
+        // Obtener datos de la API
         getGeoLocation()
     }
 
@@ -33,18 +34,19 @@ class MainActivity : AppCompatActivity() {
                     val responseBody = response.body()!!
                     data = responseBody.features
 
-                    var adapter = GeoAdapter(data)
+                    // Configurar adaptador con los datos
+                    val adapter = GeoAdapter(data)
                     binding.rvGeo.adapter = adapter
 
-                } catch (ex: java.lang.Exception) {
+                } catch (ex: Exception) {
                     ex.printStackTrace()
+                    Log.e("MainActivity", "Error al procesar la respuesta: ${ex.message}")
                 }
             }
 
             override fun onFailure(call: Call<ApiResponse>, t: Throwable) {
-                Log.d("Failed", "API Failed" + t.message)
+                Log.e("MainActivity", "Error en la llamada a la API: ${t.message}")
             }
-
         })
     }
 }
